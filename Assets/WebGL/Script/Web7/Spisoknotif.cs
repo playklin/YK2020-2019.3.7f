@@ -61,7 +61,7 @@ public class Spisoknotif : MonoBehaviour
             // заполняем информацией
             item.transform.Find("Id").GetComponent<Text>().text = "№ " + itemInfoJason["id"];
             item.transform.Find("Date").GetComponent<Text>().text = itemInfoJason["date"];
-            item.transform.Find("Street").GetComponent<Text>().text = itemInfoJason["street"] + " ул.,";
+            item.transform.Find("Street").GetComponent<Text>().text = itemInfoJason["street"] + " ,";
             item.transform.Find("House").GetComponent<Text>().text = "д. " + itemInfoJason["house"];
             item.transform.Find("Text").GetComponent<Text>().text = itemInfoJason["text"];
             //StartCoroutine(EffOpen(item));

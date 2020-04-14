@@ -3,30 +3,47 @@ using UnityEngine;using UnityEngine.UI;
 using System;using SimpleJSON;
 using UnityEngine.Networking;using UnityEngine.SceneManagement;
 
-public class SpisokAllPeoplWs : MonoBehaviour {
+public class SpisokAllPeoplSTREETWs : MonoBehaviour {
 
     public RectTransform prefarb;
     public RectTransform content;
     public static string yk_id = "";
     public static string yk_facenumber = "";
-
+    public static string yk_street = "";
     public GameObject ContentAll, ContentAllstreet;
+    public GameObject incorrect;
 
     void Start()
     {
-        if(Web1.status == ""){ContentAll.SetActive(true);ContentAllstreet.SetActive(false);
-        StartCoroutine(GetJson(PlayerPrefs.GetString("facenumber"), results => OnReceivedModels(results))); 
+        if(Web1.status == "street"){ContentAll.SetActive(false);ContentAllstreet.SetActive(true);
+        StartCoroutine(CheckStreet(yk_street));
+        //StartCoroutine(GetJson(yk_street, results => OnReceivedModels(results))); 
         }
     }
 
     public void ClickExit(){SceneManager.LoadScene("Web");}
+    public void ClickReload(){incorrect.SetActive(false);}
+
+    //проверка наличия улицы
+    IEnumerator CheckStreet(string id) {WWWForm form = new WWWForm();form.AddField("id", id);
+        UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/CheckStreet.php", form);
+        {yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError){Debug.Log(www.error);}
+        else{//Debug.Log("" + www.downloadHandler.text);//StartCoroutine(CheckStreet(yk_street));
+        if(www.downloadHandler.text == "ok" || www.downloadHandler.text ==""){
+            StartCoroutine(GetJson(yk_street, results => OnReceivedModels(results))); 
+        }else{incorrect.SetActive(true);}
+        //t_news_ok.text = "OK";
+        //SceneManager.LoadScene("WebPromo");
+        }}
+    }
+
 
    #region HASH KOD ----
 
-    public IEnumerator GetJson(string face,System.Action<TestItemModel[]> callback){
-        WWWForm form = new WWWForm();form.AddField("id", face);
-        using (UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/GetALLpeopleYK.php",form)){
-        yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError) { Debug.Log(www.error); }else{
+    public IEnumerator GetJson(string street,System.Action<TestItemModel[]> callback){
+        WWWForm form = new WWWForm();form.AddField("street", street);
+        using (UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/GetALLpeopleSTREET.php",form)){
+        yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError) {incorrect.SetActive(true);Debug.Log(www.error);}else{
             TestItemModel[] mList = JsonHelper.getJsonArray<TestItemModel>(www.downloadHandler.text);
             //Debug.Log("WWW Success: " + www.downloadHandler.text);
             callback(mList);

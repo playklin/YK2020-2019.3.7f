@@ -10,6 +10,7 @@ public class Weblog : MonoBehaviour
 {
     public InputField if_log, if_pass;
     public Text t_info, t_server_datetime;
+    public GameObject i_noint;
 
     public static string pass = "";
     // Start is called before the first frame update
@@ -20,11 +21,13 @@ public class Weblog : MonoBehaviour
     }
 
     public void ClicEnter(){
-        if(if_log.text == "max" && if_pass.text == "123"){pass = "123";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
-        if(if_log.text == "order" && if_pass.text == "456"){SceneManager.LoadScene("Web5");}else{t_info.text = "Что то пошло не так";}
-        if(if_log.text == "all" && if_pass.text == "789"){pass = "789";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
+        //if(if_log.text == "max" && if_pass.text == "123"){pass = "123";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
+        StartCoroutine(Get97531p(if_pass.text));
+        //if(if_log.text == "order" && if_pass.text == "456"){SceneManager.LoadScene("Web5");}else{t_info.text = "Что то пошло не так";}
+        //if(if_log.text == "all" && if_pass.text == "789"){pass = "789";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
     }
     public void ClickTEST(){SceneManager.LoadScene("WebTEST");}//создать опрос
+    public void ClicRepet(){i_noint.SetActive(false);}
 
     public IEnumerator GetServerDate()
     {   UnityWebRequest www = UnityWebRequest.Get("http://p905504y.beget.tech/yk/GetServerDate.php");
@@ -73,51 +76,27 @@ public class Weblog : MonoBehaviour
         } // correct
     }
 
-    // не настроено
+    //
 
-    IEnumerator GetLP(string log, string pass) { WWWForm form = new WWWForm();
+    IEnumerator GetLP(string log) { WWWForm form = new WWWForm();
         form.AddField("log", log);
-        form.AddField("pass", pass);
+        //form.AddField("pass", pass);
         UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/GetLP.php", form);
         {yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError){Debug.Log(www.error);}else{
         //Debug.Log(www.downloadHandler.text);
-        if(if_log.text == "max" && if_pass.text == "123"){pass = "123";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
+        if(if_log.text == "max" && if_pass.text == www.downloadHandler.text){pass = "123";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
+        if(if_log.text == "order" && if_pass.text == www.downloadHandler.text){SceneManager.LoadScene("Web5");}else{t_info.text = "Что то пошло не так";}
+        if(if_log.text == "all" && if_pass.text == www.downloadHandler.text){pass = "789";SceneManager.LoadScene("Web");}else{t_info.text = "Что то пошло не так";}
+        }}
+    }
 
-        //t_news_ok.text = "OK";
+    IEnumerator Get97531p(string p) { WWWForm form = new WWWForm();
+        form.AddField("p", p);
+        UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/Get97531p.php", form);
+        {yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError){Debug.Log(www.error);}else{
+        //Debug.Log(www.downloadHandler.text);
+        if(www.downloadHandler.text == "1"){ StartCoroutine(GetLP(if_log.text));}else{i_noint.SetActive(true);}
         }}
     }
 
 }
-
-
-
-/**
-
-
-<?php
-$servername = "localhost"; $username = "p905504y_bd";
-$password = "1416Zxcv"; $dbname = "p905504y_bd";
-
-//$login = $_POST["login"];
-//$loginPass = $_POST["loginPass"];
-
-$conn = new mysqli($servername, $username, $password, $dbname);// Create connection
-$conn->set_charset("utf8");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error); // Check connection
-} 
-//echo "Connected successfully<br><br>";
-
-$sql = "SELECT img FROM test WHERE id = 1";
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-    echo "".base64_encode($row["img"]);
-    }
-} else { echo "нет данных"; }
-$conn->close();
-?>
-
-
-*/

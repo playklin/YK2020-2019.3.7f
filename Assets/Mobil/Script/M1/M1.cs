@@ -13,6 +13,8 @@ using System.IO;
 
 public class M1 : MonoBehaviour
 {
+    private System.Random random = new System.Random();
+    public int kod = 0;
     //public Text t_facenumber, t_street, t_house, t_flat, t_nachisl, t_add;
     public Text t_error_code;
     public InputField if_email, if_code;
@@ -20,11 +22,14 @@ public class M1 : MonoBehaviour
 
     void Start()
     {
-
+        kod = random.Next(0,9999); // генерация кода
+        PlayerPrefs.SetString("kod", kod.ToString());
+        //Debug.Log(PlayerPrefs.GetString("kod"));
+        //kodText.text = "" + kod;
     }
 
     public void ClickUpdateEmail(){
-        if(if_code.text == "4239"){ 
+        if(if_code.text == PlayerPrefs.GetString("kod")){ 
         StartCoroutine(EditEmail(PlayerPrefs.GetString("facenumber"),if_email.text));}else{
            t_error_code.text = "Код не верный !";
         }
@@ -60,7 +65,7 @@ public class M1 : MonoBehaviour
         MailMessage message = new MailMessage();
 
         message.Subject = "ЖИЛИЩНИК ЛЕФОРТОВО ";  // Тема письма
-        message.Body = "Если вы получили это письмо, значит почта указана верно." + "\n" +"Для завершения регистрации введи код в приложение."+ "\n"+"Ваш код: 4239";
+        message.Body = "Если вы получили это письмо, значит почта указана верно." + "\n" +"Для завершения регистрации введи код в приложение."+ "\n"+"Ваш код: " + PlayerPrefs.GetString("kod");
 
         message.From = new MailAddress("demo.app.test@yandex.ru");
         message.To.Add("demo.app.test@yandex.ru");

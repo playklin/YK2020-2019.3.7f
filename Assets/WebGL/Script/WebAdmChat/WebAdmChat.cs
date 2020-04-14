@@ -17,10 +17,12 @@ public class WebAdmChat : MonoBehaviour
     public Text t_id_yk_adm;
     // Сообщения почтой
     public static string yk_email = "";
-    public static string yk_facenumber = "defROMA";
+    public static string yk_facenumber = "";
+    public static string yk_playerid = "";
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(GetPlayerID(yk_facenumber));
         StartCoroutine(GetEmail(yk_facenumber));
         t_id_yk_adm.text = "Обращение № " + SpisokAdmWs.id_yk_adm;
         //Debug.Log(SpisokAdmWs.id_yk_adm);
@@ -37,7 +39,8 @@ public class WebAdmChat : MonoBehaviour
         {yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError){Debug.Log(www.error);}
         else{//Debug.Log(" " + www.downloadHandler.text);
         //yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene("WebAdmChat");
+        //SceneManager.LoadScene("WebAdmChat");
+        StartCoroutine(PushNot(yk_playerid,if_message.text,"Администрация"));
         //Debug.Log(" " + www.downloadHandler.text);
         }
         }
@@ -100,6 +103,36 @@ public class WebAdmChat : MonoBehaviour
         //yield return new WaitForSeconds(0.5f);
         //SceneManager.LoadScene("Web5chat");
         //Debug.Log(" " + www.downloadHandler.text);
+        }}
+    }
+
+    // получение playerID
+    IEnumerator GetPlayerID(string facenumber) {WWWForm form = new WWWForm();
+        form.AddField("_facenumber_", facenumber);
+        UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/yk/GetPlayerid.php", form);
+        {yield return www.SendWebRequest();if (www.isNetworkError || www.isHttpError){Debug.Log(www.error);}
+        else{//Debug.Log(" " + www.downloadHandler.text);
+        yk_playerid = www.downloadHandler.text;
+        //yield return new WaitForSeconds(0.5f);
+        //SceneManager.LoadScene("Web5chat");
+        //Debug.Log(" " + www.downloadHandler.text);
+        }}
+    }
+
+    // Push notification
+
+    //public InputField if_text;// if_subtext;
+    public void ClickPushByPlayerID(){StartCoroutine(PushNot(yk_playerid,if_message.text,"Администрация"));}
+
+    IEnumerator PushNot(string playerid, string text, string subtext){WWWForm form = new WWWForm(); 
+        form.AddField("playerid", playerid);
+        form.AddField("text", text); form.AddField("subtext", subtext);
+        //using (UnityWebRequest www = UnityWebRequest.Post("http://p905504y.beget.tech/notification1.php",form))
+        using (UnityWebRequest www = UnityWebRequest.Post("https://playklin.000webhostapp.com/notificationBYplayerID.php",form))
+        {yield return www.SendWebRequest(); if (www.isNetworkError || www.isHttpError) { Debug.Log(www.error);}else{
+        //Debug.Log("" + www.downloadHandler.text);
+        SceneManager.LoadScene("WebAdmChat");
+        //t_debugLog.text = www.downloadHandler.text;
         }}
     }
 }

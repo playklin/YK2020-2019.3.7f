@@ -14,6 +14,7 @@ public class Web11 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if(Web1.status == ""){
         if_facenumber.text = SpisokAllPeoplWs.yk_facenumber;
         StartCoroutine(GetHouse(SpisokAllPeoplWs.yk_facenumber));
         StartCoroutine(GetFlat(SpisokAllPeoplWs.yk_facenumber));
@@ -23,7 +24,18 @@ public class Web11 : MonoBehaviour
         StartCoroutine(GetOtch(SpisokAllPeoplWs.yk_facenumber));
         StartCoroutine(GetPhone(SpisokAllPeoplWs.yk_facenumber));
         StartCoroutine(GetEmail(SpisokAllPeoplWs.yk_facenumber));
-
+        }
+        if(Web1.status == "street"){
+        if_facenumber.text = SpisokAllPeoplSTREETWs.yk_facenumber;
+        StartCoroutine(GetHouse(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetFlat(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetStreet(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetSurname(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetName(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetOtch(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetPhone(SpisokAllPeoplSTREETWs.yk_facenumber));
+        StartCoroutine(GetEmail(SpisokAllPeoplSTREETWs.yk_facenumber));
+        }
         //Debug.Log(SpisokAllPeoplWs.yk_facenumber);
         //Debug.Log(SpisokAllPeoplWs.yk_id);
     }
@@ -31,7 +43,13 @@ public class Web11 : MonoBehaviour
     //public void ClickOpenCreateP(){CreatePeople.SetActive(true);}
     public void ClickExit(){SceneManager.LoadScene("Web1");}
     //public void ClickLoad(){SceneManager.LoadScene("Web1");}
-    public void ClickEditP(){StartCoroutine(EditPeople(SpisokAllPeoplWs.yk_id,if_facenumber.text, if_surname.text, if_name.text,if_otch.text, if_street.text, if_house.text, if_flat.text, if_phone.text, if_email.text));}
+    public void ClickEditP(){
+        if(Web1.status == ""){
+            StartCoroutine(EditPeople(SpisokAllPeoplWs.yk_id,if_facenumber.text, if_surname.text, if_name.text,if_otch.text, if_street.text, if_house.text, if_flat.text, if_phone.text, if_email.text));
+        }else{
+            StartCoroutine(EditPeople(SpisokAllPeoplSTREETWs.yk_id,if_facenumber.text, if_surname.text, if_name.text,if_otch.text, if_street.text, if_house.text, if_flat.text, if_phone.text, if_email.text));
+        }
+    }
     
     IEnumerator EditPeople(string id,string facenumber, string surname, string name,string otch, string street, string house, string flat, string phone, string email) {
         WWWForm form = new WWWForm();

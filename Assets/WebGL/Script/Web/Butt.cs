@@ -27,6 +27,7 @@ public class Butt : MonoBehaviour
     public void ClickAdm(){SceneManager.LoadScene("WebAdm");}//создать опрос
     public void ClickExit(){SceneManager.LoadScene("Weblog");}//создать опрос
     public void ClickTEST(){SceneManager.LoadScene("WebTEST");}//создать опрос
+    public void ClickVac(){SceneManager.LoadScene("Web8");}//создать опрос
 
     public IEnumerator GetServerDate()
     {   UnityWebRequest www = UnityWebRequest.Get("https://playklin.000webhostapp.com/yk/GetServerDate.php");

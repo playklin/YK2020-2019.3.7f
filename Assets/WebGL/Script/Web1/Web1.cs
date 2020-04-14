@@ -11,15 +11,19 @@ public class Web1 : MonoBehaviour
     public InputField if_facenumber, if_surname, if_name,if_otch, if_street, if_house, if_flat, if_phone, if_email;
     public GameObject CreatePeople;
     public Text t_create_ok;
+    public InputField if_street_input;
+    public static string status = "";
     // Start is called before the first frame update
     void Start()
     {
         
     }
+    public void ClickSearchStreet(){status = "street";SpisokAllPeoplSTREETWs.yk_street = if_street_input.text;SceneManager.LoadScene("Web1");}
 
     public void ClickOpenCreateP(){CreatePeople.SetActive(true);}
     public void ClickCloseCreateP(){CreatePeople.SetActive(false);}
-    public void ClickLoad(){SceneManager.LoadScene("Web1");}
+    public void ClickLoad(){status = "";SceneManager.LoadScene("Web1");}
+    public void ClickMenu(){SceneManager.LoadScene("Web");}
     public void ClickCreateP(){StartCoroutine(Check1());}
     
     IEnumerator CreatePeople1(string facenumber, string surname, string name,string otch, string street, string house, string flat, string phone, string email) {
